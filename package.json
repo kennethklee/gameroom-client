@@ -1,0 +1,26 @@
+{
+  "name": "gameroom-client",
+  "version": "0.0.0",
+  "description": "Client for Gameroom",
+  "main": "index.js",
+  "scripts": {
+    "test": "./node_modules/.bin/mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/kennethklee/gameroom-client.git"
+  },
+  "keywords": [
+    "gameroom",
+    "socket.io"
+  ],
+  "author": "Kenneth Lee <kennethkl@gmail.com>",
+  "license": "BSD-2-Clause",
+  "bugs": {
+    "url": "https://github.com/kennethklee/gameroom-client/issues"
+  },
+  "devDependencies": {
+    "mocha": "~1.17.1",
+    "browserify": "~3.30.1"
+  }
+}
