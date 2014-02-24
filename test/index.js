@@ -31,11 +31,11 @@ describe('Gameroom Client', function() {
         var io = connectSocket(server),
             client = new Client(io);
 
-        setTimeout(function() {
-            client.login.should.not.be.empty;
-            gameroom.sockets.connected.should.have.property(client.login);
+        client.on('login', function(id) {
+            this.login.should.not.be.empty;
+            gameroom.sockets.connected.should.have.property(this.login);
             done();
-        }, 100);
+        });
     });
 
     it('should create a new room', function(done) {
@@ -102,10 +102,34 @@ describe('Gameroom Client', function() {
                     setTimeout(function() {
                         hostRoom.players.length.should.equal(2);
                         done();
-                    }, 100);
+                    }, 50);
                 });
             });
         });
+    });
+
+    it('should update player list on room leave');
+    it('should message a room');
+
+    it('should message a player', function(done) {
+        var server = new Server(),
+            gameroom = new Gameroom(server, mockOptions),
+            roomName = uid();
+
+        var io1 = connectSocket(server, { multiplex: false }),
+            io2 = connectSocket(server, { multiplex: false }),
+            client1 = new Client(io1),
+            client2 = new Client(io2);
+
+        client2.on('message', function(data) {
+            data.should.have.property('player').and.equal(client1.login);
+            data.should.have.property('message').and.equal('a message');
+            done();
+        });
+
+        setTimeout(function() {
+            client1.player.say(client2.login, 'a message', function() {});
+        }, 50);
     });
 
 });
