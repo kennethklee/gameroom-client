@@ -58,7 +58,7 @@ describe('Gameroom Client', function() {
         });
     });
 
-    it('should join an existing room', function(done) {
+    it('should join an existing room and update player list', function(done) {
         var server = new Server(),
             gameroom = new Gameroom(server, mockOptions);
             roomName = uid();
@@ -68,15 +68,19 @@ describe('Gameroom Client', function() {
             client1 = new Client(io1),
             client2 = new Client(io2);
 
-        client1.room.create(roomName, function(err, room) {
-            room.name.should.equal(roomName);
+        client1.room.create(roomName, function(err, hostRoom) {
+            hostRoom.name.should.equal(roomName);
 
             client2.room.join(roomName, function(err, room) {
                 room.name.should.equal(roomName);
 
                 redis.smembers(keyJoin('rooms', room.name, 'sockets'), function(err, sockets) {
                     sockets.length.should.equal(2);
-                    done();
+
+                    setTimeout(function() {
+                        hostRoom.players.length.should.equal(2);
+                        done();
+                    }, 100);
                 });
             });
         });
