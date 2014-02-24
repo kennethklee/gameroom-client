@@ -109,7 +109,31 @@ describe('Gameroom Client', function() {
     });
 
     it('should update player list on room leave');
-    it('should message a room');
+    it('should message a room', function(done) {
+        var server = new Server(),
+            gameroom = new Gameroom(server, mockOptions),
+            roomName = uid();
+
+        var io1 = connectSocket(server, { multiplex: false }),
+            io2 = connectSocket(server, { multiplex: false }),
+            client1 = new Client(io1),
+            client2 = new Client(io2);
+
+        client1.room.create(roomName, function(err, hostRoom) {
+            hostRoom.name.should.equal(roomName);
+
+            hostRoom.on('message', function(data) {
+                data.should.have.property('player').and.equal(client2.login);
+                data.should.have.property('message').and.equal('a message');
+                done();
+            });
+
+            client2.room.join(roomName, function(err, room) {
+                room.say('a message');
+            });
+
+        });
+    });
 
     it('should message a player', function(done) {
         var server = new Server(),
