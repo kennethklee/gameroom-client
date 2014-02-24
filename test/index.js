@@ -58,9 +58,31 @@ describe('Gameroom Client', function() {
         });
     });
 
+    it('should emit join event on player join', function(done) {
+        var server = new Server(),
+            gameroom = new Gameroom(server, mockOptions),
+            roomName = uid();
+
+        var io1 = connectSocket(server, { multiplex: false }),
+            io2 = connectSocket(server, { multiplex: false }),
+            client1 = new Client(io1),
+            client2 = new Client(io2);
+
+        client1.room.create(roomName, function(err, hostRoom) {
+            hostRoom.name.should.equal(roomName);
+
+            hostRoom.on('join', function(player) {
+                player.should.equal(client2.login);
+                done();
+            });
+
+            client2.room.join(roomName, function() {});
+        });
+    });
+
     it('should join an existing room and update player list', function(done) {
         var server = new Server(),
-            gameroom = new Gameroom(server, mockOptions);
+            gameroom = new Gameroom(server, mockOptions),
             roomName = uid();
 
         var io1 = connectSocket(server, { multiplex: false }),
