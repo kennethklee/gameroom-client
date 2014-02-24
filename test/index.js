@@ -1,4 +1,5 @@
 var should = require('should'),
+    uid = require('uid'),
     redis = require('node-redis-mock').createClient(),
     Server = require('http').Server,
     Gameroom = require('gameroom'),
@@ -9,6 +10,10 @@ var connectSocket = function(server, opts) {
     var addr = server.address() || server.listen().address();
 
     return io('ws://' + addr.address + ':' + addr.port, opts);
+};
+
+var keyJoin = function() {
+    return Array.prototype.slice.call(arguments, 0).join(':');
 };
 
 var mockOptions = {
@@ -31,6 +36,50 @@ describe('Gameroom Client', function() {
             gameroom.sockets.connected.should.have.property(client.login);
             done();
         }, 100);
+    });
+
+    it('should create a new room', function(done) {
+        var server = new Server(),
+            gameroom = new Gameroom(server, mockOptions),
+            roomName = uid();
+
+        var io = connectSocket(server),
+            client = new Client(io);
+
+        client.room.create(roomName, function(err, room) {
+            room.name.should.equal(roomName);
+            room.players.length.should.equal(1);
+            room.players[0].should.equal(client.login);
+
+            redis.smembers(keyJoin('sockets', client.login, 'rooms'), function(err, rooms) {
+                rooms.length.should.equal(1);
+                done();
+            });
+        });
+    });
+
+    it('should join an existing room', function(done) {
+        var server = new Server(),
+            gameroom = new Gameroom(server, mockOptions);
+            roomName = uid();
+
+        var io1 = connectSocket(server, { multiplex: false }),
+            io2 = connectSocket(server, { multiplex: false }),
+            client1 = new Client(io1),
+            client2 = new Client(io2);
+
+        client1.room.create(roomName, function(err, room) {
+            room.name.should.equal(roomName);
+
+            client2.room.join(roomName, function(err, room) {
+                room.name.should.equal(roomName);
+
+                redis.smembers(keyJoin('rooms', room.name, 'sockets'), function(err, sockets) {
+                    sockets.length.should.equal(2);
+                    done();
+                });
+            });
+        });
     });
 
 });

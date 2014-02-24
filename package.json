@@ -27,6 +27,7 @@
     "jshint": "~2.4.4",
     "gameroom": "0.0.0",
     "should": "~3.1.2",
-    "node-redis-mock": "~0.2.11"
+    "node-redis-mock": "~0.2.11",
+    "uid": "0.0.2"
   }
 }
