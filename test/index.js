@@ -108,7 +108,34 @@ describe('Gameroom Client', function() {
         });
     });
 
-    it('should update player list on room leave');
+    it('should update player list on room leave', function(done) {
+        var server = new Server(),
+            gameroom = new Gameroom(server, mockOptions),
+            roomName = uid();
+
+        var io1 = connectSocket(server, { multiplex: false }),
+            io2 = connectSocket(server, { multiplex: false }),
+            client1 = new Client(io1),
+            client2 = new Client(io2);
+
+        client1.room.create(roomName, function(err, hostRoom) {
+            hostRoom.name.should.equal(roomName);
+
+            client2.room.join(roomName, function(err, room) {
+                room.name.should.equal(roomName);
+
+                room.leave();
+            });
+
+            hostRoom.on('left', function() {
+                hostRoom.players.length.should.equal(1);
+                hostRoom.players[0].should.equal(client1.login);
+                done();
+            });
+        });
+
+    });
+
     it('should message a room', function(done) {
         var server = new Server(),
             gameroom = new Gameroom(server, mockOptions),
