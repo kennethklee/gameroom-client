@@ -108,7 +108,7 @@ describe('Gameroom Client', function() {
         });
     });
 
-    it('should update player list on room leave', function(done) {
+    it('should update player list when a player leaves', function(done) {
         var server = new Server(),
             gameroom = new Gameroom(server, mockOptions),
             roomName = uid();
