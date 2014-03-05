@@ -1,12 +1,14 @@
 gameroom-client
 ===============
 
-Client for gameroom API
+Client for gameroom API.
+
+[![Build Status](https://travis-ci.org/kennethklee/gameroom-client.png?branch=master)](https://travis-ci.org/kennethklee/gameroom-client)
 
 Requirements
 ------------
 
-* Socket.io
+* Socket.io client 0.10.x
 
 Usage
 -----
@@ -47,7 +49,11 @@ client.room.join('some-room', function(err, room) {
 
 });
 
+// Say something within the room, without the room object
+client.room.in('room-name').say('hello there');
 
+
+// Say something to another user
 client.player.say('some-user', 'blah blah blah', function(err) {
 
 });

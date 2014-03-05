@@ -58,7 +58,7 @@ describe('Gameroom Client', function() {
         });
     });
 
-    it('should emit join event on player join', function(done) {
+    it('should emit joined event when another player joins', function(done) {
         var server = new Server(),
             gameroom = new Gameroom(server, mockOptions),
             roomName = uid();
@@ -71,7 +71,7 @@ describe('Gameroom Client', function() {
         client1.room.create(roomName, function(err, hostRoom) {
             hostRoom.name.should.equal(roomName);
 
-            hostRoom.on('join', function(player) {
+            hostRoom.on('joined', function(player) {
                 player.should.equal(client2.login);
                 done();
             });
@@ -121,16 +121,16 @@ describe('Gameroom Client', function() {
         client1.room.create(roomName, function(err, hostRoom) {
             hostRoom.name.should.equal(roomName);
 
-            client2.room.join(roomName, function(err, room) {
-                room.name.should.equal(roomName);
-
-                room.leave();
-            });
-
             hostRoom.on('left', function() {
                 hostRoom.players.length.should.equal(1);
                 hostRoom.players[0].should.equal(client1.login);
                 done();
+            });
+
+            client2.room.join(roomName, function(err, room) {
+                room.name.should.equal(roomName);
+
+                room.leave();
             });
         });
 

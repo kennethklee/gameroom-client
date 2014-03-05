@@ -1,6 +1,6 @@
 {
   "name": "gameroom-client",
-  "version": "0.0.0",
+  "version": "0.0.2",
   "description": "Client for Gameroom",
   "main": "index.js",
   "scripts": {
@@ -25,7 +25,7 @@
     "browserify": "~3.30.1",
     "socket.io-client": "git://github.com/LearnBoost/socket.io-client",
     "jshint": "~2.4.4",
-    "gameroom": "0.0.0",
+    "gameroom": "0.0.2",
     "should": "~3.1.2",
     "node-redis-mock": "~0.2.11",
     "uid": "0.0.2"
