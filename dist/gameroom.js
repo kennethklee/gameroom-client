@@ -9,8 +9,8 @@ exports.identity = function(id) {
 };
 
 exports.joined = function(data) {
-    if (this.rooms[data.room]) {
-        var room = this.rooms[data.room];
+    if (this._rooms[data.room]) {
+        var room = this._rooms[data.room];
 
         room.players.push(data.player);
         room.emit('joined', data.player);
@@ -18,8 +18,8 @@ exports.joined = function(data) {
 };
 
 exports.left = function(data) {
-    if (this.rooms[data.room]) {
-        var room = this.rooms[data.room];
+    if (this._rooms[data.room]) {
+        var room = this._rooms[data.room];
 
         //room.players.push(data.player);
         room.players.splice(room.players.indexOf(data.player), 1);
@@ -29,7 +29,7 @@ exports.left = function(data) {
 
 exports.message = function(data) {
     if (data.room) {
-        var room = this.rooms[data.room];
+        var room = this._rooms[data.room];
 
         room.emit('message', data);
 
@@ -61,7 +61,7 @@ function GameRoom(io) {
     this.player = {};
     this.player.say = sayToPlayer.bind(this);
 
-    this.rooms = {};
+    this._rooms = {};
 
     EventEmitter.call(this);
 }
@@ -74,7 +74,7 @@ var createRoom = function(name, cb) {
         var room;
 
         if (!err) {
-            room = self.rooms[name] = new Room(self.io, name, [self.login]);
+            room = self._rooms[name] = new Room(self.io, name, [self.login]);
         }
 
         cb.call(self, err, room);
@@ -88,7 +88,7 @@ var joinRoom = function(name, cb) {
         var room;
 
         if (!err) {
-            room = self.rooms[name] = new Room(self.io, name, players);
+            room = self._rooms[name] = new Room(self.io, name, players);
         }
 
         cb.call(self, err, room);
@@ -96,8 +96,8 @@ var joinRoom = function(name, cb) {
 };
 
 var inRoom = function(name) {
-    if (this.rooms[name]) {
-        return this.rooms[name];
+    if (this._rooms[name]) {
+        return this._rooms[name];
     }
 };
 
