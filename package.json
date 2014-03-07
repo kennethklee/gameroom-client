@@ -7,7 +7,7 @@
     "pretest": "./node_modules/.bin/jshint *.js lib test",
     "test": "./node_modules/.bin/mocha -R spec",
     "prebuild": "./node_modules/.bin/jshint *.js lib test",
-    "build": "mkdir -p dist && ./node_modules/.bin/browserify -s gameroom index.js > dist/gameroom.js",
+    "build": "mkdir -p dist && ./node_modules/.bin/browserify -s GameRoom index.js > dist/gameroom.js",
     "clean": "rm -rf dist"
   },
   "repository": {
