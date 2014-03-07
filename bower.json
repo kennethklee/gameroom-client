@@ -4,8 +4,8 @@
   "main": "dist/gameroom.js",
   "ignore": [
     ".jshintrc",
-    "lib/*",
-    "test/*",
+    "lib/*.*",
+    "test/**",
     "*.js",
     "*.json"
   ]
