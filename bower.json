@@ -1,0 +1,12 @@
+{
+  "name": "gameroom",
+  "version": "0.0.2",
+  "main": "dist/gameroom.js",
+  "ignore": [
+    ".jshintrc",
+    "lib/*",
+    "test/*",
+    "*.js",
+    "*.json"
+  ]
+}
